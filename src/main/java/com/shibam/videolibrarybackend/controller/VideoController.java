@@ -110,6 +110,21 @@ public class VideoController {
 	    return videoService.updatePost(videoEntity, id);
 	}
 	
+	@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+	@PostMapping("/merge-videos")
+	public ResponseEntity<String> mergeVideos(@RequestBody List<Integer> videoIds) {
+	    try {
+	        // Call a service method to handle video merging
+	        videoService.mergeVideos(videoIds);
+	        return ResponseEntity.ok("Videos merged successfully");
+	    } catch (ResourceNotFoundException e) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Video not found");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error merging videos");
+	    }
+	}
+
+	
 
 }
 

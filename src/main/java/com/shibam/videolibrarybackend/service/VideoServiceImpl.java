@@ -1,6 +1,7 @@
 package com.shibam.videolibrarybackend.service;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -78,5 +79,37 @@ public class VideoServiceImpl implements VideoService {
 	public List<VideoEntity> getallPost(){
 		return videoRepository.findAll();
 	}
+	
+	 @Override
+	 public void mergeVideos(List<Integer> videoIds) {
+	        if (videoIds.size() < 2) {
+	            throw new IllegalArgumentException("At least two videos are required for merging.");
+	        }
 
-}
+	        // Fetch videos from the database
+	        List<VideoEntity> videosToMerge = new ArrayList<>();
+	        for (Integer videoId : videoIds) {
+	            VideoEntity video = videoRepository.findById(videoId)
+	                    .orElseThrow(() -> new ResourceNotFoundException(false, "Video with id " + videoId + " not found"));
+	            videosToMerge.add(video);
+	        }
+
+	        // Implement video merging logic here
+	        // For simplicity, you can update the first video with merged content
+	        VideoEntity mergedVideo = videosToMerge.get(0);
+	        mergedVideo.setTitle("Merged Video");
+	        mergedVideo.setDescription("This is a merged video containing content from multiple videos.");
+	        mergedVideo.setTags("Merged, Multi-Video");
+
+	        // Save the merged video
+	        videoRepository.save(mergedVideo);
+
+	        // Delete the other videos after merging
+	        for (int i = 1; i < videosToMerge.size(); i++) {
+	            VideoEntity videoToDelete = videosToMerge.get(i);
+	            videoRepository.deleteById(videoToDelete.getId());
+	        }
+	    }
+	}
+
+

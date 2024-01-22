@@ -14,6 +14,9 @@ public interface VideoService {
 	public VideoEntity updatePost(VideoEntity videoEntity,Integer id);
 	public void deleteVideos(Integer id);
 	public List<VideoEntity> getallPost();
+	public void mergeVideos(List<Integer> videoIds);
 	
+	
+
 
 }
